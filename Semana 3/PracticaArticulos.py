@@ -1,0 +1,8 @@
+nombreCliente = input("Ingrese su nombre: ")
+nombreArticulo1 = input("Ingrese el nombre del primer articulo: ")
+precioArticulo1 = float(input("Ingrese el precio del primer articulo: "))
+print()
+nombreArticulo2 = input("Ingrese el nombre del segundo articulo: ")
+precioArticulo2 = float(input("Ingrese el precio del segundo articulo: "))
+print()
+print("Su nombre es ", nombreCliente, " y desea adquirir un ", nombreArticulo1, " en ", precioArticulo1, " y un ", nombreArticulo2, " en ", precioArticulo2, ". El monto total a pagar es ", (precioArticulo1 + precioArticulo2), ".")

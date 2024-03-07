@@ -106,8 +106,38 @@ def reto(valor1, valor2, operacion, respuesta):
 def ventaRepuestos():
     clear()
     print("--Venta de repuestos\n  ¡Hoy promociones de aniversario!")
+
+    sistemaSeleccionado = int(input("\nSeleccione una opcion:\n  1) Repuestos para el motor\n  2) Repuestos accesorios\n  3) Repuestos para limpieza del auto\n  4) Repuestos para frenos\n\n Opcion: "))
+    montoCompra = 0
+    descuento = 0
+    tipo = ""
+    if sistemaSeleccionado == 1:
+        print("Los repuestos para el motor tienen un 15% de descuento.")
+        descuento = 15
+        tipo = "repuestos para el motor"
+    elif sistemaSeleccionado == 2:
+        print("Los repuestos para accesorios tienen un 10% de descuento.")
+        descuento = 10
+        tipo = "repuestos para accesorios"
+    elif sistemaSeleccionado == 3:
+        print("Los repuestos para limpieza del auto tienen un 5% de descuento.")
+        descuento = 5
+        tipo = "repuestos para limpieza del auto"
+    elif sistemaSeleccionado == 4:
+        print("Los repuestos para frenos tienen un 3% de descuento.")
+        descuento = 3
+        tipo = "repuestos para frenos"
+
+    montoCompra = float(input(f"-Ingrese el monto de la compra de {tipo}:"))
+    montoCompra = calcularDescuento(montoCompra, descuento)
+    print(f"El monto de la compra de {tipo} con descuento es de {montoCompra}.")
+
     input("\n\nPresione enter para continuar")
     main()
+
+def calcularDescuento(montoCompra, descuento):
+    totalCuentaConDescuento = montoCompra - ((montoCompra * descuento)/100)
+    return totalCuentaConDescuento
 
 def clear():
     os.system("cls")

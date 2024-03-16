@@ -18,7 +18,7 @@ lista1.remove(60) #es por el valor
 
 lista1.pop(1) #remueve el dato en el indice 1
 
-lista1.index(70) #retorna el indica del valor 70
+lista1.index(70) #retorna el indice del valor 70
 
 lista1.count(5) #cuenta la cantidad de veces que un elemento esta en una lista
 
@@ -28,4 +28,4 @@ lista1.reverse()
 
 lista = ['a', 'e', 'i', 'o', 'u']
 for indice, valor in enumerate (lista):
-    print(f"")
+    print(f"En el indice {indice}, el valor es {valor}.")

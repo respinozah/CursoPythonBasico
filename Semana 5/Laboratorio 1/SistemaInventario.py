@@ -48,9 +48,7 @@ def main():
     elif funcion == 6:
         os.system("cls")
         exit
-#-------------------------------------------------------
-#-------------------------------------------------------
-#-------------------------------------------------------
+
 def gestionUsuarios():
     os.system("cls")
     print("Sistema de inventarios\n----------------------------\nGestion de usuarios\n")
@@ -143,9 +141,6 @@ def validarPassword(usuario, password):
             passwordValido = True
     return passwordValido
 
-#-------------------------------------------------------
-#-------------------------------------------------------
-#-------------------------------------------------------
 def tienePermisoElUsuario(usuarioAuthenticado, permiso):
     tienePermiso = False
     indice = usuarios.index(usuarioAuthenticado)
@@ -279,12 +274,9 @@ def cargarTestData():
 if __name__ == "__main__":
     cargarTestData()
 
-    #Restaurar
-#    if login() == True:
-#        main()
-#    else:
-#        print("Usuario o contraseña invalidos.")
-    
-    #Remover
-    usuarioAuthenticado = "administrador"
+    if login() == True:
+        main()
+    else:
+        print("Usuario o contraseña invalidos.")
+
     main()

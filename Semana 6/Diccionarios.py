@@ -51,7 +51,7 @@ diccionario.get("Nombre")
 
 #update
 diccionario["Canton"] = "Central"
-
+print("Ojo aqui")
 diccionarioInicial = {"numero1":1,"numero2":2}
 diccionarioInicial.update({"numero3":3,"numero4":4,"numero2":2.5})
 print(diccionarioInicial)

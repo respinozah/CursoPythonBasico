@@ -1,5 +1,6 @@
 import os
 import pwinput
+import Categorias
 
 # Variables Globales
 #----------------------------------------------------------------------------------------
@@ -338,9 +339,16 @@ def listaSubCategorias(categoria):
 def login():
     os.system("cls")
     print("Modulo de seguridad\n----------------------------\nAutenticación\n")
-    usuario = input("Ingrese su usuario: ")
-    password = pwinput.pwinput(prompt ="Ingrese su contraseña: ", mask="*")
-    pin = pwinput.pwinput(prompt ="Ingrese su pin: ", mask="#")
+    
+    #usuario = input("Ingrese su usuario: ")
+    #password = pwinput.pwinput(prompt ="Ingrese su contraseña: ", mask="*")
+    #pin = pwinput.pwinput(prompt ="Ingrese su pin: ", mask="#")
+
+    #BORRAR
+    usuario = "admin"
+    password = "pass"
+    pin = 1
+
     authenticado = False
     global usuarioAuthenticado
     for indice, valor in enumerate (usuarios):
@@ -424,6 +432,7 @@ def cargarTestData():
     #    "Electronico": {0: 'Entretenimiento', 1: 'Educativo', 2: 'Ciencia'},
     #    "Hogar": {0: 'Cocina', 1: 'Dormitorio', 2: 'Sala'}
     #}
+    Categorias.iniciarCategorias()
     categorias.append("Deportes")
     categorias.append("Electronicos")
     categorias.append("Hogar")

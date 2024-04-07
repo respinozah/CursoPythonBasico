@@ -1,0 +1,5 @@
+1,Juan,Vendedor,100
+2,Claudia,Representante,120
+3,Grace,Vendedor remoto,115
+4,Federico,Mecanico,220
+5,Maria,Electricista,220

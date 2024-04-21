@@ -1,18 +1,26 @@
 import tkinter as tk
 from tkinter import messagebox
-from tkinter import font
+from tkinter import filedialog
+import shutil
+import os
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+import csv
 
 ARCHIVO_ESTUDIANTES = "estudiantes.txt"
+FOLDER_CARNES = r"Semana 11\Examen 2"
 ARCHIVO_CURSOS = "cursos.txt"
 ARCHIVO_MATRICULA = ""
+ARCHIVO_REPORTE = "reporte_matricula.pdf"
 
 ####################################################################################################
 # CRUD Estudiantes
 ####################################################################################################
-def crearEstudiante(carne, nombre):
+def crearEstudiante(carne, nombre, rutacarne):
     try:
         with open(ARCHIVO_ESTUDIANTES, "a") as archivoEstudiantes:
-            archivoEstudiantes.write(f"{carne},{nombre}\n")
+            archivoEstudiantes.write(f"{carne},{nombre},{(f"{FOLDER_CARNES}/carne{nombre}.jpg")}\n")
+            shutil.copy(rutacarne, (f"{FOLDER_CARNES}/carne{nombre}.jpg"))
     except Exception as e:
         messagebox.showerror(title="Error registrando estudiante", message=(f"No fue posible registrar el estudiante {nombre}. Razon: {e}"))
 
@@ -22,9 +30,9 @@ def actualizarEstudiante(carnep, nombrep):
             estudiantes = archivo.readlines()
         with open(ARCHIVO_ESTUDIANTES, "w") as archivo:
             for linea in estudiantes:
-                carne, nombre = linea.strip().split(",")
+                carne, nombre, ruta = linea.strip().split(",")
                 if carne == carnep:
-                    archivo.write(f"{carne},{nombrep}\n")
+                    archivo.write(f"{carne},{nombrep},{ruta}\n")
                 else:
                     archivo.write(linea)
     except Exception as e:
@@ -35,7 +43,7 @@ def getNombreDesdeCarne(carnep):
         with open(ARCHIVO_ESTUDIANTES, "r") as archivo:
             estudiantes = archivo.readlines()
         for estudiante in estudiantes:
-            carne, nombre = estudiante.strip().split(",")
+            carne, nombre, ruta = estudiante.strip().split(",")
             if carne == str(carnep):
                 return nombre
         return (f"No fue encontrado un estudiante con el carné {carnep}")
@@ -56,6 +64,7 @@ def removerEstudianteDelArchivo(carnep):
                 archivo.write(estudiante)
     except Exception as e:
         messagebox.showerror(title="Error removiendo estudiante", message=f"No fue posible remover el estudiante. Razon: {e}")
+
 ####################################################################################################
 # CRUD Cursos
 ####################################################################################################
@@ -293,6 +302,7 @@ def gestionarEstudiante(accion):
     def gestionarValores():
         valorCarne = textBoxCarne.get("1.0", "end-1c")
         valorNombre = textBoxNombre.get("1.0", "end-1c")
+        valorRutaCarne = textBoxRutaCarne.get("1.0", "end-1c")
 
         if accion == "Consultar":
             try:
@@ -323,9 +333,9 @@ def gestionarEstudiante(accion):
 
         elif accion == "Agregar":
             try:
-                if valorCarne != "" or valorNombre != "":
+                if valorCarne != "" or valorNombre != "" or valorRutaCarne != "":
                     if validarEsEntero(valorCarne):
-                        crearEstudiante(valorCarne, valorNombre)
+                        crearEstudiante(valorCarne, valorNombre, valorRutaCarne)
                         messagebox.showinfo(title="Estudiante creado", message=f"Estudiante {valorNombre} fue creado en el sistema.")
                         ventanaEstudiante.destroy
                     else:
@@ -336,7 +346,6 @@ def gestionarEstudiante(accion):
                 messagebox.showerror(title="Error guardando estudiante", message=("No fue posible guardar el estudiante: ", e))
 
     def removerEstudiante():
-
         valorCarne = textBoxCarne.get("1.0", "end-1c")
         confirmacion = messagebox.askyesno(title="Por favor confirmar", message=(f"¿Estás seguro de que desea remover el estudiante {getNombreDesdeCarne(valorCarne)}?"))
         if confirmacion:
@@ -353,21 +362,42 @@ def gestionarEstudiante(accion):
             except Exception as e:
                 messagebox.showerror(title="Error removiendo estudiante", message=("No fue posible remover el estudiante: ", e))
 
+    def generarRutaCarne():
+        try:
+            rutaCarne = filedialog.askopenfilename()
+            textBoxRutaCarne.delete("1.0","end-1c")
+            textBoxRutaCarne.insert("1.0", rutaCarne)
+            if rutaCarne != "":
+                return rutaCarne
+            else:
+                return ""
+        except Exception as e:
+            messagebox.showerror(title="Error seleccionando carné", message=f"No se pudo seleccionar el archivo del carné. {e}")
+            return ""
+
+    #Seccion archivo carné
+    labelCarne = tk.Label(ventanaEstudiante, text="Foto carné:")
+    labelCarne.grid(row=3, column=0, sticky=tk.W)
+    textBoxRutaCarne = tk.Text(ventanaEstudiante, height=1, width=25)
+    textBoxRutaCarne.grid(row=3, columnspan=2, column=1, sticky=tk.W)
+    btnRutaCarne = tk.Button(ventanaEstudiante, text="...", command=generarRutaCarne)
+    btnRutaCarne.grid(row=3, column=3)
+
     #Boton consultar
     btnConsultar = tk.Button(ventanaEstudiante, text="Consultar", command=gestionarValores)
-    btnConsultar.grid(row=3, column=0)
+    btnConsultar.grid(row=4, column=0)
 
     #Boton guardar
     btnGuardar = tk.Button(ventanaEstudiante, text="Guardar", command=gestionarValores)
-    btnGuardar.grid(row=3, column=1)
+    btnGuardar.grid(row=4, column=1)
 
     #Boton remover
     btnRemover = tk.Button(ventanaEstudiante, text="Remover", command=removerEstudiante)
-    btnRemover.grid(row=3, column=2)
+    btnRemover.grid(row=4, column=2)
 
     #Boton cancelar
     btnCancelar = tk.Button(ventanaEstudiante, text="Cancelar", command=ventanaEstudiante.destroy)
-    btnCancelar.grid(row=3, column=3)
+    btnCancelar.grid(row=4, column=3)
 
     if accion == "Agregar":
         btnRemover.config(state="disabled")
@@ -377,6 +407,41 @@ def gestionarEstudiante(accion):
         btnRemover.config(state="disabled")
     elif accion == "Actualizar":
         btnConsultar.config(state="disabled")
+
+#####################################################
+# Gestion de Matricula
+#####################################################
+def gestionarMatricula(accion):
+    print()
+
+#####################################################
+# Reportes
+#####################################################
+def generarReporteEstudiantesPdf(nombreArchivo, datos):
+    c = canvas.Canvas(nombreArchivo, pagesize=letter)
+    c.setFont("Helvetica", 12)
+
+    for dato in datos:
+        c.drawString(100, 750, f"Id: {dato[0]} - Nombre: {dato[1]}")
+        c.drawString(100, 730, f"Ruta de imagen: {dato[2]}")
+        c.showPage()
+    
+    c.save()
+
+def leerArchivo(nombreArchivo):
+    with open(nombreArchivo, 'r', newline='', encoding='utf-8') as archivo:
+        leer_csv = csv.reader(archivo)
+        datos = list(leer_csv)
+    return datos
+
+def generarReporteEstudiantes():
+    estudiantes = leerArchivo(ARCHIVO_ESTUDIANTES)
+    generarReporteEstudiantesPdf("ReporteEstudiantes.pdf", estudiantes)
+    
+def generarReporteCursos():
+    cursos = leerArchivo(ARCHIVO_CURSOS)
+
+
 
 #####################################################
 # Ventana Principal
@@ -405,15 +470,22 @@ menuCursos.add_command(label="Actualizar curso", command=lambda: gestionarCurso(
 
 #Menu Matricula
 menuMatricula = tk.Menu(ventanaPrincipal, tearoff=0)
-menuMatricula.add_command(label="Matricular curso", command=lambda: gestionarCurso("Agregar"))
-menuMatricula.add_command(label="Desm", command=lambda: gestionarCurso("Consultar"))
-menuMatricula.add_command(label="Actualizar curso", command=lambda: gestionarCurso("Actualizar"))
+menuMatricula.add_command(label="Matricular curso", command=lambda: gestionarMatricula("Agregar"))
+menuMatricula.add_command(label="Consultar matricula", command=lambda: gestionarMatricula("Consultar"))
+menuMatricula.add_command(label="Actualizar matricula", command=lambda: gestionarMatricula("Actualizar"))
+
+#Menu Reporte
+menuReporte = tk.Menu(ventanaPrincipal, tearoff=0)
+menuReporte.add_command(label="Generar reporte estudiantes", command=lambda: generarReporteEstudiantes)
+menuReporte.add_command(label="Generar reporte cursos", command=lambda: generarReporteCursos)
 
 #Barra Menu
 barraMenu = tk.Menu(ventanaPrincipal)
 barraMenu.add_cascade(label="Archivo", menu=menuArchivo)
 barraMenu.add_cascade(label="Estudiantes", menu=menuEstudiantes)
 barraMenu.add_cascade(label="Cursos", menu=menuCursos)
+barraMenu.add_cascade(label="Matricula", menu=menuMatricula)
+barraMenu.add_cascade(label="Reportes", menu=menuReporte)
 ventanaPrincipal.config(menu=barraMenu)
 
 #Boton cerrar DEBE SER BORRADO

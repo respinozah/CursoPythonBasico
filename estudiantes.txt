@@ -1,5 +1,3 @@
-1,uno uno
-2,dos dos
-4,cuatro cuatro
-3,tres tres
-5,Cinco cinco
+1,Juan Perez,Semana 11\Examen 2/carneJuan Perez.jpg
+2,James Kirk,Semana 11\Examen 2/carneBen 10.jpg
+3,Joe Biden,Semana 11\Examen 2/carneJoe Biden.jpg

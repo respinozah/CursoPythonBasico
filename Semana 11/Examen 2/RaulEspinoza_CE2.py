@@ -3,26 +3,23 @@ from tkinter import messagebox
 from tkinter import font
 
 ARCHIVO_ESTUDIANTES = "estudiantes.txt"
-ARCHIVO_CURSOS = ""
+ARCHIVO_CURSOS = "cursos.txt"
 ARCHIVO_MATRICULA = ""
 
 ####################################################################################################
-# CRUD Estiantes
+# CRUD Estudiantes
 ####################################################################################################
-
 def crearEstudiante(carne, nombre):
     try:
         with open(ARCHIVO_ESTUDIANTES, "a") as archivoEstudiantes:
             archivoEstudiantes.write(f"{carne},{nombre}\n")
     except Exception as e:
         messagebox.showerror(title="Error registrando estudiante", message=(f"No fue posible registrar el estudiante {nombre}. Razon: {e}"))
-    
 
 def actualizarEstudiante(carnep, nombrep):
     try:
         with open(ARCHIVO_ESTUDIANTES, "r") as archivo:
             estudiantes = archivo.readlines()
-
         with open(ARCHIVO_ESTUDIANTES, "w") as archivo:
             for linea in estudiantes:
                 carne, nombre = linea.strip().split(",")
@@ -32,7 +29,6 @@ def actualizarEstudiante(carnep, nombrep):
                     archivo.write(linea)
     except Exception as e:
         messagebox.showerror(title="Error actualizando estudiante", message=(f"No fue posible actualizar el estudiante. Razon: {e}"))
-    
 
 def getNombreDesdeCarne(carnep):
     try:
@@ -43,7 +39,6 @@ def getNombreDesdeCarne(carnep):
             if carne == str(carnep):
                 return nombre
         return (f"No fue encontrado un estudiante con el carné {carnep}")
-
     except Exception as e:
         messagebox.showerror(title="Error obteniendo nombre", message=(f"No fue posible obtener el nombre del estudiante. Razón: {e}"))
 
@@ -56,7 +51,6 @@ def removerEstudianteDelArchivo(carnep):
             carne, nombre = estudiante.strip().split(",")
             if carne != carnep:
                 estudiantesActualizados.append(estudiante)
-
         with open(ARCHIVO_ESTUDIANTES, "w") as archivo:
             for estudiante in estudiantesActualizados:
                 archivo.write(estudiante)
@@ -65,6 +59,53 @@ def removerEstudianteDelArchivo(carnep):
 ####################################################################################################
 # CRUD Cursos
 ####################################################################################################
+def crearCurso(valorCodigop, valorNombrep):
+    try:
+        with open(ARCHIVO_CURSOS, "a") as archivoCursos:
+            archivoCursos.write(f"{valorCodigop},{valorNombrep}\n")
+    except Exception as e:
+        messagebox.showerror(title="Error registrando curso", message=(f"No fue posible registrar el curso {valorNombrep}. Razon: {e}"))
+
+def actualizarCurso(codigop, nombrep):
+    try:
+        with open(ARCHIVO_CURSOS, "r") as archivo:
+            cursos = archivo.readlines()
+        with open(ARCHIVO_CURSOS, "w") as archivo:
+            for linea in cursos:
+                codigo, nombre = linea.strip().split(",")
+                if codigo == codigop:
+                    archivo.write(f"{codigo},{nombrep}\n")
+                else:
+                    archivo.write(linea)
+    except Exception as e:
+        messagebox.showerror(title="Error actualizando curso", message=(f"No fue posible actualizar el curso. Razon: {e}"))
+
+def getNombreDesdeCodigo(codigop):
+    try:
+        with open(ARCHIVO_CURSOS, "r") as archivo:
+            cursos = archivo.readlines()
+        for curso in cursos:
+            codigo, nombre = curso.strip().split(",")
+            if codigo == str(codigop):
+                return nombre
+        return (f"No fue encontrado un curso con el código {codigop}")
+    except Exception as e:
+        messagebox.showerror(title="Error obteniendo nombre", message=(f"No fue posible obtener el nombre del curso. Razón: {e}"))
+
+def removerCursoDelArchivo(codigop):
+    try:
+        with open(ARCHIVO_CURSOS, "r") as archivo:
+            cursos = archivo.readlines()
+        cursosActualizados = []
+        for curso in cursos:
+            codigo, nombre = curso.strip().split(",")
+            if codigo != codigop:
+                cursosActualizados.append(curso)
+        with open(ARCHIVO_CURSOS, "w") as archivo:
+            for curso in cursosActualizados:
+                archivo.write(curso)
+    except Exception as e:
+        messagebox.showerror(title="Error removiendo curso", message=f"No fue posible remover el curso. Razon: {e}")
 
 ####################################################################################################
 # CRUD Matricula
@@ -87,6 +128,130 @@ def validarEsEntero(valor):
 ####################################################################################################
 # Tkinter
 ####################################################################################################
+
+#####################################################
+# Gestion de Cursos
+#####################################################
+def gestionarCurso(accion):
+    #Ventana emergente curso
+    ventanaCurso = tk.Toplevel(ventanaPrincipal)
+    ventanaCurso.title("Detalles del curso")
+    ventanaCurso.geometry("500x300")
+
+    #Label de instrucciones
+    labelTitulo = tk.Label(ventanaCurso)
+    labelTitulo.grid(row=0, columnspan=3, sticky=tk.W)
+    def cambiarInstrucciones(accion):
+        if accion == "Agregar":
+            textoLabel = "Completar la informacion del curso (código y nombre) por agregar."
+        elif accion == "Consultar":
+            textoLabel = "Ingrese el numero de código y haga click en Consultar."
+        elif accion == "Actualizar":
+            textoLabel = "Actualice el nombre y haga click en Actualizar."
+        elif accion == "Remover":
+            textoLabel = "Indique el numero de código y haga click en Remover."
+        labelTitulo.config(text=textoLabel)
+    cambiarInstrucciones(accion)
+
+    #Seccion carne
+    labelCodigo = tk.Label(ventanaCurso, text="Código:")
+    labelCodigo.grid(row=1, column=0, sticky=tk.W)
+    textBoxCodigo = tk.Text(ventanaCurso, height=1, width=12)
+    textBoxCodigo.grid(row=1, column=1, sticky=tk.W)
+
+    #Seccion nombre
+    labelNombre = tk.Label(ventanaCurso, text="Nombre:")
+    labelNombre.grid(row=2, column=0, sticky=tk.W)
+    textBoxNombre = tk.Text(ventanaCurso, height=1, width=25)
+    textBoxNombre.grid(row=2, column=1, sticky=tk.W)
+
+    #Gestion de curso
+    def gestionarValores():
+        valorCodigo = textBoxCodigo.get("1.0", "end-1c")
+        valorNombre = textBoxNombre.get("1.0", "end-1c")
+
+        if accion == "Consultar":
+            try:
+                if valorCodigo != "":
+                    try:
+                        textBoxNombre.delete("1.0","end-1c")
+                        textBoxNombre.insert("1.0", getNombreDesdeCodigo(int(valorCodigo)))
+                    except ValueError:
+                        messagebox.showerror(title="Campo requerido", message="El número de código debe ser un número.")
+                else:
+                    messagebox.showerror(title="Valor requerido", message="Se necesita un número de código para poder consultar un curso.")
+            except Exception as e:
+                messagebox.showerror(title="Error consultando curso", message=("No fue posible consultar curso: ", e))
+
+        elif accion == "Actualizar":
+            try:
+                if valorCodigo != "" or valorNombre != "":
+                    if validarEsEntero(valorCodigo):
+                        actualizarCurso(valorCodigo, valorNombre)
+                        messagebox.showinfo(title="Curso actualizado", message=f"Curso {valorCodigo} {valorNombre} fue actualizado en el sistema.")
+                        ventanaCurso.destroy
+                    else:
+                        messagebox.showerror(title="Valor invalido", message="El número de código debe ser un valor númerico.")#
+                else:
+                    messagebox.showerror(title="Campo requerido", message="Favor revisar que los campos esten completos.")
+            except Exception as e:
+                messagebox.showerror(title="Error actualizando curso", message=("No fue posible actualizar la informacion del curso: ", e))
+
+        elif accion == "Agregar":
+            try:
+                if valorCodigo != "" or valorNombre != "":
+                    if validarEsEntero(valorCodigo):
+                        crearCurso(valorCodigo, valorNombre)
+                        messagebox.showinfo(title="Curso creado", message=f"Curso {valorNombre} fue creado en el sistema.")
+                        ventanaCurso.destroy
+                    else:
+                        messagebox.showerror(title="Valor invalido", message="El número de código debe ser un valor númerico.")
+                else:
+                    messagebox.showerror(title="Campos requeridos", message="Favor revisar que los campos esten completos.")
+            except Exception as e:
+                messagebox.showerror(title="Error guardando curso", message=("No fue posible guardar el curso: ", e))
+
+    def removerCurso():
+        valorCodigo = textBoxCodigo.get("1.0", "end-1c")
+        confirmacion = messagebox.askyesno(title="Por favor confirmar", message=(f"¿Estás seguro de que desea remover el curso {getNombreDesdeCodigo(valorCodigo)}?"))
+        if confirmacion:
+            try:
+                if valorCodigo != "":
+                    if validarEsEntero(valorCodigo):
+                        removerCursoDelArchivo(valorCodigo)
+                        messagebox.showinfo(title="Curso removido", message=f"Curso fue removido del sistema.")
+                        ventanaCurso.destroy
+                    else:
+                        messagebox.showerror(title="Valor invalido", message="El número de código debe ser un valor númerico.")
+                else:
+                    messagebox.showerror(title="Campos requeridos", message="Favor revisar que el numero de carne.")
+            except Exception as e:
+                messagebox.showerror(title="Error removiendo curso", message=("No fue posible remover el curso: ", e))
+
+    #Boton consultar
+    btnConsultar = tk.Button(ventanaCurso, text="Consultar", command=gestionarValores)
+    btnConsultar.grid(row=3, column=0)
+
+    #Boton guardar
+    btnGuardar = tk.Button(ventanaCurso, text="Guardar", command=gestionarValores)
+    btnGuardar.grid(row=3, column=1)
+
+    #Boton remover
+    btnRemover = tk.Button(ventanaCurso, text="Remover", command=removerCurso)
+    btnRemover.grid(row=3, column=2)
+
+    #Boton cancelar
+    btnCancelar = tk.Button(ventanaCurso, text="Cancelar", command=ventanaCurso.destroy)
+    btnCancelar.grid(row=3, column=3)
+
+    if accion == "Agregar":
+        btnRemover.config(state="disabled")
+        btnConsultar.config(state="disabled")
+    elif accion == "Consultar":
+        btnGuardar.config(state="disabled")
+        btnRemover.config(state="disabled")
+    elif accion == "Actualizar":
+        btnConsultar.config(state="disabled")
 
 #####################################################
 # Gestion de Estudiantes
@@ -213,7 +378,6 @@ def gestionarEstudiante(accion):
     elif accion == "Actualizar":
         btnConsultar.config(state="disabled")
 
-
 #####################################################
 # Ventana Principal
 #####################################################
@@ -233,10 +397,23 @@ menuEstudiantes.add_command(label="Nuevo estudiante", command=lambda: gestionarE
 menuEstudiantes.add_command(label="Consultar estudiante", command=lambda: gestionarEstudiante("Consultar"))
 menuEstudiantes.add_command(label="Actualizar estudiante", command=lambda: gestionarEstudiante("Actualizar"))
 
+#Menu Cursos
+menuCursos = tk.Menu(ventanaPrincipal, tearoff=0)
+menuCursos.add_command(label="Nuevo curso", command=lambda: gestionarCurso("Agregar"))
+menuCursos.add_command(label="Consultar curso", command=lambda: gestionarCurso("Consultar"))
+menuCursos.add_command(label="Actualizar curso", command=lambda: gestionarCurso("Actualizar"))
+
+#Menu Matricula
+menuMatricula = tk.Menu(ventanaPrincipal, tearoff=0)
+menuMatricula.add_command(label="Matricular curso", command=lambda: gestionarCurso("Agregar"))
+menuMatricula.add_command(label="Desm", command=lambda: gestionarCurso("Consultar"))
+menuMatricula.add_command(label="Actualizar curso", command=lambda: gestionarCurso("Actualizar"))
+
 #Barra Menu
 barraMenu = tk.Menu(ventanaPrincipal)
 barraMenu.add_cascade(label="Archivo", menu=menuArchivo)
 barraMenu.add_cascade(label="Estudiantes", menu=menuEstudiantes)
+barraMenu.add_cascade(label="Cursos", menu=menuCursos)
 ventanaPrincipal.config(menu=barraMenu)
 
 #Boton cerrar DEBE SER BORRADO

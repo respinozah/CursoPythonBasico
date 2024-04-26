@@ -1,0 +1,3 @@
+id,usuario,password,nombre,apellido,puesto,estado
+1,admin,admin,Administrador,Administrador,Administrador,activo
+2,jperez,123456,Juan,Perez,Jefe de bodega,activo

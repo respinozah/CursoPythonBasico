@@ -1,3 +1,5 @@
 id,usuario,password,nombre,apellido,puesto,estado
-1,admin,admin,Administrador,Administrador,Administrador,activo
-2,jperez,123456,Juan,Perez,Jefe de bodega,activo
+1,admin,admin,Administrador,Administrador,1,activo
+2,jperez,123456,Juan,Perez,2,activo
+3,respinoza,password,Raul,Espinoza,1,activo
+4,jgonzales,contrasena,Luis,Gonzales,2,activo

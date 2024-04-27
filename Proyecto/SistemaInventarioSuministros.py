@@ -1,6 +1,6 @@
-#import Usuario
-#import Puesto
 import UsuarioGestion
+import Usuario
+import ArticuloGestion
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -10,9 +10,7 @@ from tkinter import messagebox
 #####################################################
 def autenticar():
     try:
-        usuario = textBoxUsuario.get()
-        password = textBoxPassword.get()
-        if usuario == "admin" and password == "admin":
+        if Usuario.login(textBoxUsuario.get(), textBoxPassword.get()):
             ventanaLogin.destroy()
             abrirVentanaPrincipal()
         else:
@@ -36,13 +34,6 @@ btnLogin = tk.Button(ventanaLogin, text="Ingresar", command=autenticar)
 btnLogin.grid(row=3, column=1)
 btnCancelar = tk.Button(ventanaLogin, text="Cancelar", command=ventanaLogin.quit)
 btnCancelar.grid(row=3, column=2)
-#################
-# Test data
-textBoxUsuario.delete(0, tk.END)
-textBoxUsuario.insert(0, "admin")
-textBoxPassword.delete(0, tk.END)
-textBoxPassword.insert(0, "admin")
-#################
 
 #####################################################
 # Ventana principal
@@ -57,11 +48,10 @@ def abrirVentanaPrincipal():
         indentacionBotones = 50
         anchoBotones = 28
         # Boton de Gestión de usuarios 1
-        #btnUsuarios = tk.Button(ventanaPrincipal, text="Gestión de usuarios", width=anchoBotones, command=abrirVentanaListaUsuarios)
         btnUsuarios = tk.Button(ventanaPrincipal, text="Gestión de usuarios", width=anchoBotones, command=UsuarioGestion.abrirVentanaListaUsuarios)
         btnUsuarios.grid(row=1, column=0, padx=indentacionBotones, pady=espacioEntreBotones)
         # Boton de Gestión de artículos 2
-        btnArticulos = tk.Button(ventanaPrincipal, text="Gestión de artículos", width=anchoBotones)
+        btnArticulos = tk.Button(ventanaPrincipal, text="Gestión de artículos", width=anchoBotones, command=ArticuloGestion.abrirVentanaListaArticulos)
         btnArticulos.grid(row=2, column=0, padx=indentacionBotones, pady=espacioEntreBotones)
         # Boton de Ingreso en inventario 3
         btnIngresoArticulos = tk.Button(ventanaPrincipal, text="Ingreso en inventario", width=anchoBotones)

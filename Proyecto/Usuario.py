@@ -3,6 +3,16 @@ import os
 
 ARCHIVO_USUARIOS = r"Proyecto\sum_usuarios.csv"
 
+def login(usuariop, passwordp):
+    autenticado = False
+    with open(ARCHIVO_USUARIOS, "r") as archivo:
+        usuarios = csv.DictReader(archivo)
+        for usuario in usuarios:
+            if usuario["usuario"] == usuariop and usuario["password"] == passwordp and usuario["estado"] == "activo":
+                autenticado = True
+    return autenticado
+
+
 def getUsuariosActivos():
     # Verificar si el archivo csv existe
     if not os.path.exists(ARCHIVO_USUARIOS):

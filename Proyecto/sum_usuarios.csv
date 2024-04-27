@@ -3,3 +3,4 @@ id,usuario,password,nombre,apellido,puesto,estado
 2,jperez,123456,Juan,Perez,2,activo
 3,respinoza,password,Raul,Espinoza,1,activo
 4,jgonzales,contrasena,Luis,Gonzales,2,activo
+5,kmolina,123456,Karen,Molina,1,inactivo

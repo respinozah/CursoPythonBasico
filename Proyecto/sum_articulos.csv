@@ -1,0 +1,4 @@
+id,nombre,descripcion,idMarca,estado,presentacion,stock,costoUnitario,fechaCreacion,fechaActualizacion
+1,Escoba,Para barrer,17,activo,unidad,12,3550.5,20/04/2024,25/04/2024
+2,Jabon lavaplatos,Para lavar platos,6,activo,unidad,32,620.0,20/04/2024,25/04/2024
+3,Cuchara,Cuchara desechable,4,activo,unidad,600,24,20/04/2024,20/04/2024
